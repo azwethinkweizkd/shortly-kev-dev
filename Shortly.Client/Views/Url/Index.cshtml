@@ -1,41 +1,42 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-
-@* @using Shortly.Client.Data.Models;
-
-@model List<Url>; *@
-
+﻿@using Shortly.Client.Data.Models
+@model List<Url>;
 @{
-    var currentDateTime = DateTime.UtcNow;
-
-    // var allUrls = ViewData["AllUrls"] as List<string>;
+    ViewData["Title"] = "All short links";
 }
 
-@* <h4>Example</h4> *@
+<div class="container">
+    <a class="btn btn-outline-success" asp-controller="Home" asp-action="Index">
+        Add New
+    </a>
+</div>
 
-@* @foreach(var link in @Model)
-{
-    <p>Original link: @link.OriginalLink</p>
-    <p>Date created: @link.DateCreated</p>
-    <p>Number of clicks: @link.NumOfClicks</p>
-} *@
-
-@* <h4>@ViewData["ShortenedUrl"]</h4>
-
-@foreach (var url in allUrls)
-{
-    <h3>@url</h3>
-} *@
-
-@* <h4>@ViewBag.ShortenedUrl</h4>
-
-@foreach (var url in ViewBag.AllUrls)
-{
-    <h3>@url</h3>
-} *@
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <h3>Success @TempData["SuccessMessage"].ToString()</h3>
-}
+<div class="container">
+    <table class="table table-stripped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Original link</th>
+                <th scope="col">Shortened link</th>
+                <th scope="col">Number of clicks</th>
+                <th scope="col">User</th>
+                <th scope="col">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var url in Model)
+            {
+                <tr>
+                    <td>@url.Id</td>
+                    <td>@url.OriginalLink</td>
+                    <td>@url.ShortLink</td>
+                    <td>@url.NumOfClicks</td>
+                    <td>@url.UserId</td>
+                    <td>
+                        <a class="btn btn-outline-danger" asp-controller="Url" asp-action="Remove">Remove</a>
+                    </td>
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+</div>

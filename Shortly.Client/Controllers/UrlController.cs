@@ -7,51 +7,40 @@ namespace Shortly.Client.Controllers
     {
         public IActionResult Index()
         {
-
-            ////Data is from DB
-
-            //var urlDb = new Url()
-            //{
-            //    Id = 1,
-            //    OriginalLink = "https://original.com",
-            //    ShortLink = "shrtly",
-            //    NumOfClicks = 1,
-            //    UserId = 1,
-            //    DateCreated = DateTime.Now,
-            //};
-
-            //var allData = new List<Url>
-            //{
-            //    urlDb
-            //};
-
-            //return View(allData);
-
-            //ViewData["ShortenedUrl"] = "This is just a short url";
-            //ViewData["AllUrls"] = new List<string>() { "Url1", "Url2", "Url3" };
-
-            //ViewBag.ShortenedUrl = "This is just a short url";
-            //ViewBag.AllUrls = new List<string>() { "Url1", "Url2", "Url3" };
-
-            var tempData = TempData["SuccessMessage"];
-            var viewBag = ViewBag.Test1;
-            var viewData = ViewData["Test1"];
-
-            if (TempData["SuccessMessage"] != null)
+            //Fake Db Data
+            var allUrls = new List<Url>()
             {
-                ViewBag.SuccessMessage = TempData["SuccessMessage"].ToString();
-            }
-            return View();
+                new Url()
+                {
+                    Id = 1,
+                    OriginalLink = "https://link1.com",
+                    ShortLink = "sh1",
+                    NumOfClicks = 1,
+                    UserId = 1,
+                },
+                new Url()
+                {
+                    Id = 2,
+                    OriginalLink = "https://link2.com",
+                    ShortLink = "sh2",
+                    NumOfClicks = 2,
+                    UserId = 2,
+                },
+                new Url()
+                {
+                    Id = 3,
+                    OriginalLink = "https://link3.com",
+                    ShortLink = "sh3",
+                    NumOfClicks = 3,
+                    UserId = 3,
+                }
+            };
+
+            return View(allUrls);
         }
 
         public IActionResult Create() {
-            //ShortenedUrl
 
-            var shortenedUrl = 'short';
-
-            TempData["SuccessMessage"] = "Successful!";
-            ViewBag.Test1 = "test1";
-            ViewData["Test2"] = "test2";
 
             return RedirectToAction("Index");
         }
