@@ -1,13 +1,41 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
 
+@* @using Shortly.Client.Data.Models;
+
+@model List<Url>; *@
 
 @{
     var currentDateTime = DateTime.UtcNow;
+
+    // var allUrls = ViewData["AllUrls"] as List<string>;
 }
 
-<h4>Welcome to this app</h4>
-<p>@currentDateTime</p>
+@* <h4>Example</h4> *@
+
+@* @foreach(var link in @Model)
+{
+    <p>Original link: @link.OriginalLink</p>
+    <p>Date created: @link.DateCreated</p>
+    <p>Number of clicks: @link.NumOfClicks</p>
+} *@
+
+@* <h4>@ViewData["ShortenedUrl"]</h4>
+
+@foreach (var url in allUrls)
+{
+    <h3>@url</h3>
+} *@
+
+@* <h4>@ViewBag.ShortenedUrl</h4>
+
+@foreach (var url in ViewBag.AllUrls)
+{
+    <h3>@url</h3>
+} *@
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <h3>Success @TempData["SuccessMessage"].ToString()</h3>
+}
