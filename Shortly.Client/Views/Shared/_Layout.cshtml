@@ -20,28 +20,36 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Home"
+                               asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Url" asp-action="Index">All links</a>
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Url"
+                               asp-action="Index">All links</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Users">Users</a>
+                            <a class="nav-link text-dark"
+                               asp-area=""
+                               asp-controller="Authentication"
+                               asp-action="Users">Users</a>
                         </li>
+
                     </ul>
                 </div>
 
                 <div class="flex justify-content-evenly">
-                    <a class="btn btn-outline-success my-2 my-sm-0 btn-login" asp-controller="Auth" asp-action="login">
+                    <a class="btn btn-outline-success my-2 my-sm-0 btn-login" asp-controller="Authentication" asp-action="login">
                         Login
                     </a>
 
-                    <a class="btn btn-outline-primary my-2 my-sm-0 btn-register" asp-controller="Auth" asp-action="Register">
+                    <a class="btn btn-outline-primary my-2 my-sm-0 btn-register" asp-controller="Authentication" asp-action="Register">
                         Register
                     </a>
                 </div>
-
-
             </div>
         </nav>
     </header>
@@ -51,9 +59,19 @@
         </main>
     </div>
 
-    <footer class="footer">
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-3 border-top">
+            <div class="col-md-4 d-flex align-items-center">
+                <span class="mb-3 mb-md-0 text-muted">
+                    <a class="text-muted" href="https://youtube.com/c/dotnethow">
+                        Subcribe to my YouTube Channel
+                    </a>
+                </span>
+            </div>
+        </footer>
+    </div>
 
-    </footer>
+   
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
