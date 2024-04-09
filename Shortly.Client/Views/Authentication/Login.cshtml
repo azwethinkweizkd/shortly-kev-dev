@@ -1,4 +1,4 @@
-﻿
+﻿@model LoginVm;
 @{
     ViewData["Title"] = "Login to your account";
 }
@@ -9,18 +9,43 @@
         <h4 class="form-header">Login to your account</h4>
         <div class="row">
             <div class="col-md-8 offset-md-2">
-                <form asp-controller="Authentication" asp-action="Login">
+                <form asp-controller="Authentication" asp-action="HandleLogin">
                     <div class="from-group mb-3">
                         <label for="emailAddress">Email Address</label> 
-                        <input type="email" class="form-control" id="emailAddress" placeholder="Enter email"/>
+                        <input type="email" asp-for="EmailAddress" class="form-control" id="emailAddress" placeholder="Enter email"/>
                     </div>
                     <div class="from-group mb-3">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter password" />
+                        <input type="password" asp-for="Password" class="form-control" id="password" placeholder="Enter password" />
                     </div>
                     <button type="submit" class="btn btn-outline-success mt-2 btn-login">Login</button>
                 </form>
+
+                @* <button onclick="login()" class="btn btn-outline-success mt-2 btn-login">Login</button> *@
             </div>
         </div>
     </div>
 </div>
+
+                       @*  <script>
+                            function login() {
+                                var emailAddress = $("#emailAddress").val();
+                                var password = $('#password').val();
+                                console.log(emailAddress, password)
+                                $.ajax({
+                                    URL: '@Url.Action("HandleLogin", "Authentication")',
+                                    type: 'POST',
+                                    dataType:'json',
+                                    data: {
+                                        EmailAddress: emailAddress,
+                                        Password: password
+                                    },
+                                    success: function(res) {
+                                        console.log("Login successful")
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log("Login failed")
+                                    },
+                                })
+                            }
+                        </script> *@
