@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shortly.Client.Data.ViewModels;
 
 namespace Shortly.Client.Controllers
 {
@@ -9,6 +10,10 @@ namespace Shortly.Client.Controllers
             return View();
         }
         public IActionResult Login()
+        {
+            return View(new LoginVm());
+        }
+        public IActionResult HandleLogin(LoginVm loginVm)
         {
             return View();
         }
