@@ -13,39 +13,17 @@
                     <div class="from-group mb-3">
                         <label for="emailAddress">Email Address</label> 
                         <input type="email" asp-for="EmailAddress" class="form-control" id="emailAddress" placeholder="Enter email"/>
+                        <span asp-validation-for="EmailAddress" class="text-danger"></span>
                     </div>
                     <div class="from-group mb-3">
                         <label for="password">Password</label>
                         <input type="password" asp-for="Password" class="form-control" id="password" placeholder="Enter password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     <button type="submit" class="btn btn-outline-success mt-2 btn-login">Login</button>
                 </form>
 
-                @* <button onclick="login()" class="btn btn-outline-success mt-2 btn-login">Login</button> *@
             </div>
         </div>
     </div>
 </div>
-
-                       @*  <script>
-                            function login() {
-                                var emailAddress = $("#emailAddress").val();
-                                var password = $('#password').val();
-                                console.log(emailAddress, password)
-                                $.ajax({
-                                    URL: '@Url.Action("HandleLogin", "Authentication")',
-                                    type: 'POST',
-                                    dataType:'json',
-                                    data: {
-                                        EmailAddress: emailAddress,
-                                        Password: password
-                                    },
-                                    success: function(res) {
-                                        console.log("Login successful")
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.log("Login failed")
-                                    },
-                                })
-                            }
-                        </script> *@
