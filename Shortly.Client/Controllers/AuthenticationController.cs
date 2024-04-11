@@ -9,22 +9,35 @@ namespace Shortly.Client.Controllers
         {
             return View();
         }
+
         public IActionResult Login()
         {
             return View(new LoginVm());
         }
-        public IActionResult HandleLogin(LoginVm loginVm)
+
+        public IActionResult LoginSubmitted(LoginVm loginVM)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                return View("Login", loginVm);
+                return View("Login", loginVM);
             }
 
             return RedirectToAction("Index", "Home");
         }
+
         public IActionResult Register()
         {
-            return View();
+            return View(new RegisterVm());
+        }
+
+        public IActionResult RegisterUser(RegisterVm registerVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Register", registerVM);
+            }
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
