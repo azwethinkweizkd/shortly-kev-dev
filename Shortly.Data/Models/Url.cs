@@ -1,6 +1,12 @@
-﻿namespace Shortly.Client.Data.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Shortly.Data.Models
 {
-    public class Url
+    internal class Url
     {
         public int Id { get; set; }
         public string OriginalLink { get; set; }
