@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shortly.Data.Models
 {
-    internal class Url
+    public class Url
     {
         public int Id { get; set; }
         public string OriginalLink { get; set; }
