@@ -1,40 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Shortly.Client.Data.ViewModels;
+using Shortly.Data;
 
 namespace Shortly.Client.Controllers
 {
-    public class UrlController : Controller
+    public class UrlController(AppDbContext context) : Controller
     {
+        private readonly AppDbContext _context = context;
+
         public IActionResult Index()
         {
-            //Fake Db Data
-            var allUrls = new List<GetUrlVm>()
-            {
-                new GetUrlVm()
+            var allUrls= _context
+                .Urls
+                .Include(n => n.User)
+                .Select(url => new GetUrlVm()
                 {
-                    Id = 1,
-                    OriginalLink = "https://link1.com",
-                    ShortLink = "sh1",
-                    NumOfClicks = 1,
-                    UserId = 1,
-                },
-                new GetUrlVm()
-                {
-                    Id = 2,
-                    OriginalLink = "https://link2.com",
-                    ShortLink = "sh2",
-                    NumOfClicks = 2,
-                    UserId = 2,
-                },
-                new GetUrlVm()
-                {
-                    Id = 3,
-                    OriginalLink = "https://link3.com",
-                    ShortLink = "sh3",
-                    NumOfClicks = 3,
-                    UserId = 3,
-                }
-            };
+                    Id = url.Id,
+                    OriginalLink = url.OriginalLink,
+                    ShortLink = url.ShortLink,
+                    NumOfClicks = url.NumOfClicks,
+                    UserId = url.UserId,
+
+                    User = url.User != null ? new GetUserVm()
+                    {
+                        Id = url.User.Id,
+                        FullName = url.User.FullName
+                    } : null
+                })
+                .ToList();
 
             return View(allUrls);
         }
@@ -47,14 +41,16 @@ namespace Shortly.Client.Controllers
 
         public IActionResult Remove(int id)
         {
-            return View();
+            var url = _context.Urls.FirstOrDefault(n => n.Id == id);
+            if (url == null)
+            {
+                return RedirectToAction("Index");
+            }
 
+            _ = _context.Urls.Remove(url);
+            _context.SaveChanges();
 
-        } 
-            
-        public IActionResult Remove(int userId, int linkId)
-        {
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }
