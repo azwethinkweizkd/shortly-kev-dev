@@ -1,36 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shortly.Client.Data.ViewModels;
 using Shortly.Data;
+using Shortly.Data.Models;
+using Shortly.Data.Services;
 
 namespace Shortly.Client.Controllers
 {
-    public class UrlController(AppDbContext context) : Controller
+    public class UrlController(IUrlsService urlsService, IMapper mapper) : Controller
     {
-        private readonly AppDbContext _context = context;
+        private readonly IUrlsService _urlsService = urlsService;
+        private readonly IMapper _mapper = mapper;
 
         public IActionResult Index()
         {
-            var allUrls= _context
-                .Urls
-                .Include(n => n.User)
-                .Select(url => new GetUrlVm()
-                {
-                    Id = url.Id,
-                    OriginalLink = url.OriginalLink,
-                    ShortLink = url.ShortLink,
-                    NumOfClicks = url.NumOfClicks,
-                    UserId = url.UserId,
+            var allUrls = urlsService
+                .GetUrls();
+            var mappedAllUrls = mapper.Map<List<Url>, List<GetUrlVm>>(allUrls);
+                
 
-                    User = url.User != null ? new GetUserVm()
-                    {
-                        Id = url.User.Id,
-                        FullName = url.User.FullName
-                    } : null
-                })
-                .ToList();
-
-            return View(allUrls);
+            return View(mappedAllUrls);
         }
 
         public IActionResult Create() {
@@ -41,14 +31,7 @@ namespace Shortly.Client.Controllers
 
         public IActionResult Remove(int id)
         {
-            var url = _context.Urls.FirstOrDefault(n => n.Id == id);
-            if (url == null)
-            {
-                return RedirectToAction("Index");
-            }
-
-            _ = _context.Urls.Remove(url);
-            _context.SaveChanges();
+            urlsService.Delete(id);
 
             return RedirectToAction("Index");
         }
