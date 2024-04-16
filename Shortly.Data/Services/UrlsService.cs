@@ -13,45 +13,49 @@ namespace Shortly.Data.Services
         private readonly AppDbContext _appDbContext = appDbContext;
 
 
-        public Url Add(Url url)
+        public async Task<Url> AddAsync(Url url)
         {
-            _appDbContext.Urls.Add(url);
-            _appDbContext.SaveChanges();
+            await _appDbContext.Urls.AddAsync(url);
+            await _appDbContext.SaveChangesAsync();
 
             return url;
         }
-        public Url GetById(int id)
+        public async Task<Url> GetByIdAsync(int id)
         {
-            var url = _appDbContext.Urls.FirstOrDefault(x => x.Id == id);
+            var url = await _appDbContext.Urls.FirstOrDefaultAsync(x => x.Id == id);
             return url;
         }
 
-        public List<Url> GetUrls() => [.. _appDbContext.Urls.Include(n => n.User)];
-
-        public Url Update(int id, Url url)
+        public async Task<List<Url>> GetUrlsAsync()
         {
-            var urlDb = GetById(id);
+            var allUrls = await _appDbContext.Urls.Include(n => n.User).ToListAsync();
+            return allUrls;
+        }
+
+        public async Task<Url> UpdateAsync(int id, Url url)
+        {
+            var urlDb = await GetByIdAsync(id);
             if (urlDb != null)
             {
                 urlDb.OriginalLink = url.OriginalLink;
                 urlDb.ShortLink = url.ShortLink;
                 urlDb.DateUpdated = DateTime.UtcNow;
 
-                _appDbContext.SaveChanges();
+                await _appDbContext.SaveChangesAsync();
             }
 
             return urlDb;
         }
 
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var urlDb = GetById(id);
+            var urlDb = await GetByIdAsync(id);
 
             if(urlDb != null)
             {
                 _appDbContext.Remove(urlDb);
-                _appDbContext.SaveChanges();
+                await _appDbContext.SaveChangesAsync();
             }
         }
 
