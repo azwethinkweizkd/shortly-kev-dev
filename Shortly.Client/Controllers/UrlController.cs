@@ -13,10 +13,10 @@ namespace Shortly.Client.Controllers
         private readonly IUrlsService _urlsService = urlsService;
         private readonly IMapper _mapper = mapper;
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var allUrls = urlsService
-                .GetUrls();
+            var allUrls = await urlsService
+                .GetUrlsAsync();
             var mappedAllUrls = mapper.Map<List<Url>, List<GetUrlVm>>(allUrls);
                 
 
@@ -29,9 +29,9 @@ namespace Shortly.Client.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Remove(int id)
+        public async Task<IActionResult> Remove(int id)
         {
-            urlsService.Delete(id);
+            await urlsService.DeleteAsync(id);
 
             return RedirectToAction("Index");
         }

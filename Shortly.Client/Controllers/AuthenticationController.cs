@@ -10,9 +10,9 @@ namespace Shortly.Client.Controllers
     {
         private IUsersService _usersService = usersService;
 
-        public IActionResult Users()
+        public async Task<IActionResult> Users()
         {
-            var users = usersService.GetUsers();
+            var users = await usersService.GetUsersAsync();
 
             return View(users);
         }
