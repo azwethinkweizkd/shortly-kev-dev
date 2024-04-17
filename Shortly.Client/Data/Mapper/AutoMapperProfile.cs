@@ -9,7 +9,7 @@ namespace Shortly.Client.Data.Mapper
         public AutoMapperProfile()
         {
             CreateMap<Url, GetUrlVm>().ReverseMap();
-            CreateMap<User, GetUserVm>().ReverseMap();
+            CreateMap<AppUser, GetUserVm>().ReverseMap();
         }
     }
 }
