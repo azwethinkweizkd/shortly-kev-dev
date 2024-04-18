@@ -4,7 +4,13 @@ using System.ComponentModel.DataAnnotations;
 namespace Shortly.Client.Data.ViewModels
 {
     public class RegisterVm
+
+        
     {
+
+        [Required(ErrorMessage = "Username is required")]
+        public string Username { get; set; }
+
         [Required(ErrorMessage = "Full name is required")]
         public string FullName { get; set; }
 
