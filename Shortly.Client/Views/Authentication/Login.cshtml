@@ -10,6 +10,7 @@
         <div class="row">
             <div class="col-md-8 offset-md-2">
                 <form asp-controller="Authentication" asp-action="HandleLogin">
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="from-group mb-3">
                         <label for="emailAddress">Email Address</label> 
                         <input type="email" asp-for="EmailAddress" class="form-control" id="emailAddress" placeholder="Enter email"/>
