@@ -17,7 +17,10 @@
                 <th scope="col">Original link</th>
                 <th scope="col">Shortened link</th>
                 <th scope="col">Number of clicks</th>
-                <th scope="col">User</th>
+                @if (User.IsInRole(Role.Admin))
+                {
+                    <th scope="col">User</th>
+                }
                 <th scope="col">Options</th>
             </tr>
         </thead>
@@ -29,7 +32,10 @@
                     <td>@url.OriginalLink</td>
                     <td>@url.ShortLink</td>
                     <td>@url.NumOfClicks</td>
-                    <td>@(url.User != null ? url.User.FullName : "-")</td>
+                    @if (User.IsInRole(Role.Admin))
+                    {
+                        <td>@(url.User != null ? url.User.FullName : "-")</td>
+                    }
                     <td>
                         <a class="btn btn-outline-danger" asp-controller="Url" asp-action="Remove" asp-route-id="@url.Id">Remove</a>
                     </td>

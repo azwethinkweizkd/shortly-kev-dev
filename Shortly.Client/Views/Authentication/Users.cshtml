@@ -8,17 +8,18 @@
     <div class="row row-cols-1 row-cols-md-1 g-4">
         @foreach(var user in Model)
         {
+            var collapseId = $"collapseExample{user.Id}";
             <div class="col">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">@user.FullName</h5>
                         <p class="card-text">This user has created @user.Urls.Count link(s) and has a total of @user.Urls.Sum(n => n.NumOfClicks) click(s).</p>
                         <p>
-                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample1">
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
                                 Show details
                             </button>
                         </p>
-                        <div class="collapse" id="collapseExample1">
+                        <div class="collapse" id="@collapseId">
                             <div class="card card-body">
                                 <table class="table table-striped table-dark">
                                     <thead>
