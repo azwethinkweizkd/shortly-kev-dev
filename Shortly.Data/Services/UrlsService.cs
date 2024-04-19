@@ -26,10 +26,17 @@ namespace Shortly.Data.Services
             return url;
         }
 
-        public async Task<List<Url>> GetUrlsAsync()
+        public async Task<List<Url>> GetUrlsAsync(string userId, bool isAdmin)
         {
-            var allUrls = await _appDbContext.Urls.Include(n => n.User).ToListAsync();
-            return allUrls;
+            var allUrlsQuery =  _appDbContext.Urls.Include(n => n.User);
+
+            if (isAdmin)
+            {
+                return await allUrlsQuery.ToListAsync();
+            } else
+            {
+                return await allUrlsQuery.Where(n => n.UserId == userId).ToListAsync();
+            }
         }
 
         public async Task<Url> UpdateAsync(int id, Url url)
