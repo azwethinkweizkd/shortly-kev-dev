@@ -46,6 +46,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     //Lockout Settings
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+
+    //Sign in settings
+    options.SignIn.RequireConfirmedEmail = true;
 });
 
 //Add services to the container

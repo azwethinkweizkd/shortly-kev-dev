@@ -46,6 +46,10 @@ namespace Shortly.Client.Controllers
                     if (userLoggedIn.Succeeded)
                     {
                         return RedirectToAction("Index", "Home");
+                    } else if (userLoggedIn.IsNotAllowed)
+                    {
+                       
+                        return RedirectToAction("EmailConfirmation");
                     }
                     else
                     {
@@ -128,6 +132,12 @@ namespace Shortly.Client.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> EmailConfirmation()
+        {
+            var confirmEmail = new ConfirmEmailLoginVm();
+            return View(confirmEmail);
         }
     }
 }
