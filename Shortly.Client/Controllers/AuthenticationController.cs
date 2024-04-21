@@ -54,7 +54,11 @@ namespace Shortly.Client.Controllers
                     {
                        
                         return RedirectToAction("EmailConfirmation");
-                    }
+                    } 
+                    //else if (userLoggedIn.RequiresTwoFactor)
+                    //{
+                    //    return RedirectToAction("TwoFactorConfirmation", new { loggedInUserId = user.Id});
+                    //}
                     else
                     {
                         ModelState.AddModelError("", "Invalid login attempt. Please, check your username and password");
@@ -197,5 +201,23 @@ namespace Shortly.Client.Controllers
             TempData["EmailConfirmationVerified"] = "Thank you! Your account has been confirmed. You can now log in!";
             return RedirectToAction("Index", "Home");
         }
+
+        //public async Task<IActionResult> TwoFactorConfirmation(string loggedInUserId)
+        //{
+        //    var user = await _userManager.FindByIdAsync(loggedInUserId);
+
+        //    if (user != null)
+        //    {
+        //        var userToken = await _userManager.GenerateTwoFactorTokenAsync(user, "Phone");
+
+        //        var confirm2FALoginVm = new Confirm2FALoginVm()
+        //        {
+        //            UserId = loggedInUserId,
+        //        };
+
+        //        return View(confirm2FALoginVm);
+        //    }
+        //    return RedirectToAction("Index", "Home");
+        //}
     }
 }
