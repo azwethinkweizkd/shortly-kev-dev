@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using Shortly.Client.Data.ViewModels;
 using Shortly.Client.Helpers.Roles;
 using Shortly.Data;
@@ -11,11 +13,13 @@ namespace Shortly.Client.Controllers
 {
     public class AuthenticationController(IUsersService usersService,
         SignInManager<AppUser> signInManager,
-        UserManager<AppUser> userManager) : Controller
+        UserManager<AppUser> userManager,
+        IConfiguration configuration) : Controller
     {
         private readonly IUsersService _usersService = usersService;
         private readonly SignInManager<AppUser> _signInManager = signInManager;
         private readonly UserManager<AppUser> _userManager = userManager;
+        private readonly IConfiguration _configuration = configuration;
 
         public async Task<IActionResult> Users()
         {
@@ -138,6 +142,60 @@ namespace Shortly.Client.Controllers
         {
             var confirmEmail = new ConfirmEmailLoginVm();
             return View(confirmEmail);
+        }
+
+        public async Task<IActionResult> SendEmailConfirmation(ConfirmEmailLoginVm confirmEmailLoginVM)
+        {
+            var user = await _userManager.FindByEmailAsync(confirmEmailLoginVM.EmailAddress);
+
+            if(user != null) 
+            {
+                var userToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var userConfirmationLink = Url.Action("EmailConfirmationVerified", "Authentication", new { userId = user.Id, userConfirmationToken = userToken }, Request.Scheme);
+
+                //3. Send the email
+                var apiKey = _configuration["SendGrid:ShrtlyKey"];
+                var sendGridClient = new SendGridClient(apiKey);
+
+                var fromEmailAddress = new EmailAddress(_configuration["SendGrid:FromAddress"], "Shrtly-App");
+                var emailSubject = "[Shortly] Verify your account";
+                var toEmailAddress = new EmailAddress(confirmEmailLoginVM.EmailAddress);
+
+                var emailContentTxt = $"Hello from Shortly App. Please, click this link to verify your account: {userConfirmationLink}";
+                var emailContentHtml = $"Hello from Shortly App. Please, click this link to verify your account: <a href=\"{userConfirmationLink}\"> Verify your account </a> ";
+
+                var emailRequest = MailHelper.CreateSingleEmail(fromEmailAddress, toEmailAddress, emailSubject, emailContentTxt, emailContentHtml);
+                var emailResponse = await sendGridClient.SendEmailAsync(emailRequest);
+                if (emailResponse.IsSuccessStatusCode)
+                {
+                    TempData["EmailConfirmation"] = "Thank you! Please, check your email to verify your account";
+
+                    return RedirectToAction("Index", "Home");
+                } else
+                {
+                    ModelState.AddModelError("", $"Confirmation email failed to send");
+                }
+            } else
+            {
+                ModelState.AddModelError("", $"Email address {confirmEmailLoginVM.EmailAddress} does not exist");
+            }
+
+            return View("EmailConfirmation", confirmEmailLoginVM);
+        }
+
+        public async Task<IActionResult> EmailConfirmationVerified(string userId, string userConfirmationToken)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            await _userManager.ConfirmEmailAsync(user, userConfirmationToken);
+
+            TempData["EmailConfirmationVerified"] = "Thank you! Your account has been confirmed. You can now log in!";
+            return RedirectToAction("Index", "Home");
         }
     }
 }

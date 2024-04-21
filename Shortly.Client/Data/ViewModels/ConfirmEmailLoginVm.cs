@@ -1,4 +1,7 @@
-﻿namespace Shortly.Client.Data.ViewModels
+﻿using Shortly.Client.Helpers.Validators;
+using System.ComponentModel.DataAnnotations;
+
+namespace Shortly.Client.Data.ViewModels
 {
     public class ConfirmEmailLoginVm
     {
