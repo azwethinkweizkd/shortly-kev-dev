@@ -8,6 +8,7 @@ using Shortly.Client.Helpers.Roles;
 using Shortly.Data;
 using Shortly.Data.Models;
 using Shortly.Data.Services;
+using System.Security.Claims;
 
 namespace Shortly.Client.Controllers
 {
@@ -29,7 +30,12 @@ namespace Shortly.Client.Controllers
 
         public async Task<IActionResult> Login()
         {
-            return View(new LoginVm());
+            var loginVm = new LoginVm()
+            {
+                Schemes = await _signInManager.GetExternalAuthenticationSchemesAsync(),
+            };
+
+            return View(loginVm);
         }
 
         public async Task<IActionResult> HandleLogin(LoginVm loginVM)
@@ -219,5 +225,69 @@ namespace Shortly.Client.Controllers
         //    }
         //    return RedirectToAction("Index", "Home");
         //}
+
+        public IActionResult ExternalLogin(string provider, string returnUrl = "")
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Authentication", new {ReturnUrl = returnUrl});
+
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+            return new ChallengeResult(provider, properties);
+        }
+
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = "", string remoteError = "")
+        {
+            var loginVm = new LoginVm()
+            {
+                Schemes = await _signInManager.GetExternalAuthenticationSchemesAsync()
+            };
+
+            if(!string.IsNullOrEmpty(remoteError))
+            {
+                ModelState.AddModelError("", $"Error from external login provider: {remoteError}");
+                return View("Login", loginVm);
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info != null)
+            {
+                ModelState.AddModelError("", $"Error from external login provider: {remoteError}");
+                return View("Login", loginVm);
+            }
+
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (signInResult.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            } else
+            {
+                var userEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if(!string.IsNullOrEmpty(userEmail))
+                {
+                    var user = await _userManager.FindByEmailAsync(userEmail);
+
+                    if (user == null)
+                    {
+                        user = new AppUser()
+                        {
+                            UserName = userEmail,
+                            Email = userEmail,
+                            EmailConfirmed = true,
+                        };
+
+                        await _userManager.CreateAsync(user);
+                        await _userManager.AddToRoleAsync(user, Role.User);
+                    }
+
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            ModelState.AddModelError("", "Something went wrong");
+            return View("Login", loginVm);
+        }
     }
 }
