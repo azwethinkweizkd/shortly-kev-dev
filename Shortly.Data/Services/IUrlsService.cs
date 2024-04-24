@@ -14,5 +14,8 @@ namespace Shortly.Data.Services
         Task<Url> GetByIdAsync(int id);
         Task<Url> UpdateAsync(int id, Url url);
         Task DeleteAsync(int id);
+
+        Task<Url> GetOriginalUrlAsync(string shortUrl);
+        Task IncrementNumberOfClicks(int shortUrlId);
     }
 }
